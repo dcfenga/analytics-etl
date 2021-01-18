@@ -178,6 +178,9 @@ object GerritAnalyticsTransformations {
     def addOrganization()(implicit spark: SparkSession): DataFrame =
       df.withColumn("organization", emailToDomainUdf(col("email")))
 
+    def addLastCommitDate()(implicit spark: SparkSession): DataFrame =
+      df.withColumn("last_commit_date", longDateToISOUdf(col("last_commit_date")))
+
     def commitSet(implicit spark: SparkSession): Dataset[String] = {
       extractCommits(df)
     }
@@ -186,6 +189,7 @@ object GerritAnalyticsTransformations {
         aliasesDFMaybe: Option[DataFrame]
     )(implicit spark: SparkSession): DataFrame = {
       df.addOrganization()
+        .addLastCommitDate()
         .handleAliases(aliasesDFMaybe)
         .dropCommits
     }

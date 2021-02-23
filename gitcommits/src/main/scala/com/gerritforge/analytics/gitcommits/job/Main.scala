@@ -119,7 +119,7 @@ trait Job {
     val projects = fetchProjects(config)
 
     logger.info(
-      s"Loaded a list of ${projects.size} projects ${if (projects.size > 20) projects.take(20).mkString("[", ",", ", ...]")
+      s"Loaded a list of ${projects.size} projects ${if (projects.size > 500) projects.take(500).mkString("[", ",", ", ...]")
       else projects.mkString("[", ",", "]")}"
     )
 

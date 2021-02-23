@@ -40,7 +40,7 @@ case class GerritEndpointConfig(
     new GerritConnectivity(username, password, ignoreSSLCert.getOrElse(false))
 
   val gerritProjectsUrl: Option[String] = baseUrl.map { url =>
-    s"${url}/projects/" + prefix.fold("")("?p=" + _)
+    s"${url}/projects/?n=500" + prefix.fold("")("&p=" + _)
   }
 
   def queryOpt(opt: (String, Option[String])): Option[String] = {

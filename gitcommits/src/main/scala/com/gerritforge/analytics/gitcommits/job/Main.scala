@@ -86,6 +86,10 @@ object Main extends App with SparkApp with Job with LazyLogging with FetchRemote
         c.copy(extractBranches = Some(input))
       } text "enables branches extraction for each commit"
 
+      opt[String]("dashboard") optional () action { (input, c) =>
+        c.copy(dashboard = Some(input))
+      } text "Dashbaord name"
+
     }
 
   cliOptionParser.parse(args, GerritEndpointConfig()) match {
@@ -134,15 +138,12 @@ trait Job {
   }
 
   def saveES(df: DataFrame)(implicit config: GerritEndpointConfig) {
-    import scala.concurrent.ExecutionContext.Implicits.global
+    //import scala.concurrent.ExecutionContext.Implicits.global
     config.elasticIndex.foreach { esIndex =>
       import com.gerritforge.analytics.infrastructure.ESSparkWriterImplicits.withAliasSwap
-      df.saveToEsWithAliasSwap(esIndex, indexType)
-        .futureAction
-        .map(actionRespose => logger.info(s"Completed index swap ${actionRespose}"))
-        .recover { case exception: Exception => logger.info(s"Index swap failed ${exception}") }
+      //df.saveToEsWithAliasSwap(esIndex, indexType)
+      df.saveToEs(esIndex, indexType, config.dashboard.get, config.prefix.get, config.since.get.toString, config.until.get.toString, config.username.get)
     }
-
   }
 }
 

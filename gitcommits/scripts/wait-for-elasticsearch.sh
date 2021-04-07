@@ -17,6 +17,7 @@ wait_for() {
     echo "* Waiting for Elasticsearch at $ELASTIC_SEARCH_URL ($i/30)"
     sleep 2
   done
+
   echo "Operation timed out" >&2
   exit 1
 }

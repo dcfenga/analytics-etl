@@ -14,6 +14,7 @@
 
 package com.gerritforge.analytics.common.api
 import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.http.ElasticDsl._
 import org.apache.http.HttpHost
 import org.apache.spark.sql.SparkSession
 import org.elasticsearch.client.RestClient
@@ -39,5 +40,18 @@ trait SparkEsClientProvider {
   def closeElasticsearchClientConn(): Unit = {
     esClient.close()
     restClient.close()
+  }
+
+  def createAnalyticsIndex(index: String) = {
+    esClient.execute {
+      createIndex(index)
+    }
+  }
+
+  def insertDocIntoIndex(index: String, indexType: String, jsonStr: String) = {
+    esClient.execute {
+      indexInto(index/indexType).doc(jsonStr)
+      search()
+    }
   }
 }

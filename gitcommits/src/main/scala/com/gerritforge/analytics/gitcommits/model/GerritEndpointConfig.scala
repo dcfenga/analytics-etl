@@ -33,7 +33,8 @@ case class GerritEndpointConfig(
     username: Option[String] = None,
     password: Option[String] = None,
     ignoreSSLCert: Option[Boolean] = None,
-    extractBranches: Option[Boolean] = None
+    extractBranches: Option[Boolean] = None,
+    dashboard: Option[String] = None
 ) {
 
   val gerritApiConnection: GerritConnectivity =
